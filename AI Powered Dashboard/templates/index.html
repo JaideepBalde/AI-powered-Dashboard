@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolt AI - AI-Powered Dashboard by Jaideep Balde</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass-effect {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white transition-colors duration-300">
+    <div id="app" class="min-h-screen">
+        <!-- Sidebar -->
+        <div id="sidebar" class="fixed left-0 top-0 w-64 h-screen bg-gradient-to-b from-gray-900 via-purple-900 to-gray-900 border-r border-purple-500/20 z-40">
+            <div class="p-6">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 mb-8">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Bolt AI</h1>
+                        <p class="text-xs text-gray-400">by Jaideep Balde</p>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="space-y-2" id="navigation">
+                    <button onclick="setActiveTab('chat')" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        <span class="font-medium">BoltCore AI</span>
+                    </button>
+                    <button onclick="setActiveTab('planner')" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-300 hover:bg-purple-800/30 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="font-medium">Day Planner</span>
+                    </button>
+                    <button onclick="setActiveTab('news')" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-300 hover:bg-purple-800/30 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                        </svg>
+                        <span class="font-medium">Live News</span>
+                    </button>
+                    <button onclick="setActiveTab('market')" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-300 hover:bg-purple-800/30 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                        <span class="font-medium">Market Data</span>
+                    </button>
+                    <button onclick="setActiveTab('files')" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-300 hover:bg-purple-800/30 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="font-medium">File Intelligence</span>
+                    </button>
+                    <button onclick="setActiveTab('toolbox')" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-300 hover:bg-purple-800/30 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="font-medium">Toolbox</span>
+                    </button>
+                    <button onclick="setActiveTab('ideas')" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-300 hover:bg-purple-800/30 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                        <span class="font-medium">Idea Lab</span>
+                    </button>
+                </nav>
+
+                <!-- Footer Actions -->
+                <div class="absolute bottom-6 left-6 right-6 space-y-2">
+                    <button onclick="toggleTheme()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-300 hover:bg-purple-800/30 hover:text-white">
+                        <svg id="theme-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <span class="font-medium" id="theme-text">Light Mode</span>
+                    </button>
+                    
+                    <button onclick="showAbout()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-300 hover:bg-purple-800/30 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="font-medium">About</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="ml-64 h-screen" id="main-content">
+            <!-- Chat Tab -->
+            <div id="chat-tab" class="tab-content h-full bg-gray-900">
+                <!-- Header -->
+                <div class="border-b border-gray-700 bg-gray-800 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-white">BoltCore AI Assistant</h2>
+                        <div class="flex space-x-2">
+                            <button onclick="exportChat()" class="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span>Export</span>
+                            </button>
+                            <button onclick="clearChat()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Role Selector -->
+                    <div class="flex flex-wrap gap-2" id="role-selector">
+                        <button onclick="setRole('developer')" class="role-btn px-4 py-2 rounded-full transition-all duration-200 bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg">
+                            Developer
+                        </button>
+                        <button onclick="setRole('therapist')" class="role-btn px-4 py-2 rounded-full transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            Therapist
+                        </button>
+                        <button onclick="setRole('finance')" class="role-btn px-4 py-2 rounded-full transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            Finance Guru
+                        </button>
+                        <button onclick="setRole('student')" class="role-btn px-4 py-2 rounded-full transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            Student Helper
+                        </button>
+                        <button onclick="setRole('custom')" class="role-btn px-4 py-2 rounded-full transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            Custom
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div class="flex-1 overflow-y-auto p-4 space-y-4" style="height: calc(100% - 200px);" id="chat-messages">
+                    <div class="text-center py-12 text-gray-400">
+                        <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        <p class="text-lg">Start a conversation with BoltCore AI</p>
+                        <p class="text-sm">Choose a role above and ask me anything!</p>
+                    </div>
+                </div>
+
+                <!-- Input -->
+                <div class="border-t border-gray-700 bg-gray-800 p-4">
+                    <div class="flex space-x-4">
+                        <input
+                            type="text"
+                            id="chat-input"
+                            placeholder="Type your message..."
+                            class="flex-1 px-4 py-3 rounded-lg border bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-purple-500 focus:ring-2 focus:border-transparent"
+                            onkeypress="handleChatKeyPress(event)"
+                        />
+                        <button
+                            onclick="sendMessage()"
+                            id="send-btn"
+                            class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center space-x-2"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                            <span>Send</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other tabs will be added here -->
+            <div id="planner-tab" class="tab-content h-full bg-gray-900 hidden">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold text-white mb-4">Smart Day Planner</h2>
+                    <p class="text-gray-400">Task management coming soon...</p>
+                </div>
+            </div>
+
+            <div id="news-tab" class="tab-content h-full bg-gray-900 hidden">
+                <div class="border-b border-gray-700 bg-gray-800 p-6">
+                    <h2 class="text-2xl font-bold text-white mb-4">Live Global News</h2>
+                    <div class="flex flex-wrap gap-2" id="news-tabs">
+                        <button onclick="loadNews('world')" class="news-tab-btn px-4 py-2 rounded-full transition-all duration-200 bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg">
+                            World
+                        </button>
+                        <button onclick="loadNews('finance')" class="news-tab-btn px-4 py-2 rounded-full transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            Finance
+                        </button>
+                        <button onclick="loadNews('india')" class="news-tab-btn px-4 py-2 rounded-full transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            India
+                        </button>
+                        <button onclick="loadNews('crypto')" class="news-tab-btn px-4 py-2 rounded-full transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            Crypto
+                        </button>
+                        <button onclick="loadNews('tech')" class="news-tab-btn px-4 py-2 rounded-full transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            Tech
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6 overflow-y-auto" style="height: calc(100% - 140px);">
+                    <div id="news-loading" class="flex justify-center items-center h-64">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+                    </div>
+                    <div id="news-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden"></div>
+                </div>
+            </div>
+
+            <div id="market-tab" class="tab-content h-full bg-gray-900 hidden">
+                <div class="border-b border-gray-700 bg-gray-800 p-6">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-2xl font-bold text-white">Market & Finance Snapshots</h2>
+                        <button onclick="loadMarketData()" class="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-200">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            <span>Refresh</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6 overflow-y-auto" style="height: calc(100% - 100px);">
+                    <div id="market-loading" class="flex justify-center items-center h-64">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+                    </div>
+                    <div id="market-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden"></div>
+                </div>
+            </div>
+
+            <div id="files-tab" class="tab-content h-full bg-gray-900 hidden">
+                <div class="border-b border-gray-700 bg-gray-800 p-6">
+                    <h2 class="text-2xl font-bold text-white">File Intelligence</h2>
+                    <p class="mt-2 text-gray-400">Upload documents for AI-powered analysis and insights</p>
+                </div>
+                <div class="p-6 overflow-y-auto" style="height: calc(100% - 120px);">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="border-2 border-dashed border-gray-600 hover:border-gray-500 rounded-lg p-12 text-center transition-all duration-200">
+                            <svg class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            <p class="text-lg font-medium text-white mb-2">Drag and drop your file here</p>
+                            <p class="text-sm text-gray-400 mb-4">or click to browse</p>
+                            <label class="flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 cursor-pointer transition-all duration-200 w-fit mx-auto">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span>Choose File</span>
+                                <input type="file" class="hidden" accept=".txt,.md" onchange="handleFileUpload(event)">
+                            </label>
+                            <p class="text-xs text-gray-500 mt-4">Supported formats: .txt, .md</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="toolbox-tab" class="tab-content h-full bg-gray-900 hidden">
+                <div class="border-b border-gray-700 bg-gray-800 p-6">
+                    <h2 class="text-2xl font-bold text-white mb-4">Productivity Toolbox</h2>
+                    <div class="flex flex-wrap gap-2" id="toolbox-tabs">
+                        <button onclick="showTool('currency')" class="tool-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                            <span>Currency</span>
+                        </button>
+                        <button onclick="showTool('calculator')" class="tool-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>Calculator</span>
+                        </button>
+                        <button onclick="showTool('notes')" class="tool-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span>Notes</span>
+                        </button>
+                        <button onclick="showTool('timer')" class="tool-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Timer</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6 overflow-y-auto" style="height: calc(100% - 140px);">
+                    <!-- Currency Converter -->
+                    <div id="currency-tool" class="tool-content max-w-2xl mx-auto">
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-white mb-6">Currency Converter</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Amount</label>
+                                    <input type="number" id="currency-amount" value="1" class="w-full px-4 py-3 rounded-lg border bg-gray-700 border-gray-600 text-white" placeholder="Enter amount">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">From Currency</label>
+                                    <select id="from-currency" class="w-full px-4 py-3 rounded-lg border bg-gray-700 border-gray-600 text-white">
+                                        <option value="USD">USD - US Dollar</option>
+                                        <option value="EUR">EUR - Euro</option>
+                                        <option value="GBP">GBP - British Pound</option>
+                                        <option value="INR">INR - Indian Rupee</option>
+                                        <option value="JPY">JPY - Japanese Yen</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-sm font-medium text-gray-300 mb-2">To Currency</label>
+                                <select id="to-currency" class="w-full px-4 py-3 rounded-lg border bg-gray-700 border-gray-600 text-white">
+                                    <option value="USD">USD - US Dollar</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                    <option value="GBP">GBP - British Pound</option>
+                                    <option value="INR" selected>INR - Indian Rupee</option>
+                                    <option value="JPY">JPY - Japanese Yen</option>
+                                </select>
+                            </div>
+                            <button onclick="convertCurrency()" class="w-full px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200 mb-6">
+                                Convert Currency
+                            </button>
+                            <div id="currency-result" class="hidden rounded-lg p-4 text-center bg-gray-700 border border-gray-600">
+                                <p class="text-2xl font-bold text-white" id="conversion-result"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Calculator -->
+                    <div id="calculator-tool" class="tool-content max-w-md mx-auto hidden">
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-white mb-6">Calculator</h3>
+                            <div class="rounded-lg p-4 mb-4 text-right bg-gray-900 border border-gray-600">
+                                <div class="text-3xl font-mono text-white" id="calc-display">0</div>
+                            </div>
+                            <div class="grid grid-cols-4 gap-3" id="calculator-buttons">
+                                <!-- Calculator buttons will be generated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div id="notes-tool" class="tool-content max-w-4xl mx-auto hidden">
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg">
+                            <div class="flex items-center justify-between p-4 border-b border-gray-700">
+                                <h3 class="text-lg font-semibold text-white">Quick Notes</h3>
+                                <button onclick="saveNotes()" class="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                                    </svg>
+                                    <span>Save as .txt</span>
+                                </button>
+                            </div>
+                            <textarea id="notes-content" placeholder="Start typing your notes here..." class="w-full h-96 p-4 resize-none focus:outline-none bg-gray-800 text-white placeholder-gray-400"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Timer -->
+                    <div id="timer-tool" class="tool-content max-w-md mx-auto hidden">
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+                            <div class="flex bg-gray-700 rounded-lg p-1 mb-6">
+                                <button onclick="setTimerMode('timer')" class="timer-mode-btn flex-1 py-2 rounded-md text-sm font-medium transition-colors bg-white text-gray-900 shadow">Timer</button>
+                                <button onclick="setTimerMode('stopwatch')" class="timer-mode-btn flex-1 py-2 rounded-md text-sm font-medium transition-colors text-gray-300">Stopwatch</button>
+                            </div>
+                            <div id="timer-setup" class="mb-6">
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Minutes</label>
+                                <input type="number" id="timer-minutes" value="5" min="1" class="w-full px-4 py-3 rounded-lg border bg-gray-700 border-gray-600 text-white">
+                            </div>
+                            <div class="rounded-lg p-6 mb-6 text-center bg-gray-900 border border-gray-600">
+                                <div class="text-4xl font-mono font-bold text-white" id="timer-display">05:00</div>
+                            </div>
+                            <div class="flex justify-center space-x-4" id="timer-controls">
+                                <button onclick="startTimer()" class="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m-9 4h10a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span>Start</span>
+                                </button>
+                                <button onclick="resetTimer()" class="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-200">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Reset</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ideas-tab" class="tab-content h-full bg-gray-900 hidden">
+                <div class="border-b border-gray-700 bg-gray-800 p-6">
+                    <h2 class="text-2xl font-bold text-white">AI-Powered Idea Lab</h2>
+                    <p class="mt-2 text-gray-400">Transform your keywords into business opportunities with AI intelligence</p>
+                </div>
+                <div class="p-6 overflow-y-auto" style="height: calc(100% - 120px);">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-6 mb-6">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                </svg>
+                                <h3 class="text-lg font-semibold text-white">Enter Your Keyword</h3>
+                            </div>
+                            <div class="flex space-x-4">
+                                <input type="text" id="idea-keyword" placeholder="e.g., fitness, education, sustainability..." class="flex-1 px-4 py-3 rounded-lg border bg-gray-700 border-gray-600 text-white placeholder-gray-400" onkeypress="handleIdeaKeyPress(event)">
+                                <button onclick="generateIdeas()" class="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                                    </svg>
+                                    <span>Generate Ideas</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="idea-loading" class="text-center py-12 hidden">
+                            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500 mx-auto mb-4"></div>
+                            <p class="text-lg text-white">AI is crafting your ideas...</p>
+                            <p class="text-sm text-gray-400">Analyzing market trends and opportunities</p>
+                        </div>
+                        
+                        <div id="idea-results" class="space-y-6 hidden"></div>
+                        
+                        <div id="idea-empty" class="text-center py-12 text-gray-400">
+                            <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                            <p class="text-lg">Ready to spark innovation?</p>
+                            <p class="text-sm">Enter a keyword above to generate business ideas, domains, and more!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- About Modal -->
+        <div id="about-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
+            <div class="bg-gray-800 border border-gray-700 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                                <span class="text-2xl font-bold text-white">JB</span>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-white">About Bolt AI</h2>
+                                <p class="text-gray-400">Created by Jaideep Balde</p>
+                            </div>
+                        </div>
+                        <button onclick="hideAbout()" class="text-2xl text-gray-400 hover:text-white">×</button>
+                    </div>
+
+                    <div class="bg-gray-700 border border-gray-600 rounded-lg p-6 mb-6">
+                        <p class="text-base leading-relaxed mb-4 text-gray-300">
+                            Hi, I'm <strong>Jaideep Balde</strong>, an engineering student passionate about combining technology, finance, and AI to solve real-world problems.
+                        </p>
+                        <p class="text-base leading-relaxed mb-4 text-gray-300">
+                            I created <strong>Bolt AI</strong> as a one-stop productivity and intelligence dashboard that integrates the power of artificial intelligence with intuitive design. Whether you're a developer, trader, student, or everyday user, Bolt AI is designed to help you organize, analyze, and act faster — all in one sleek, responsive interface.
+                        </p>
+                        <p class="text-base leading-relaxed text-gray-300">
+                            🔍 My goal was simple: build something clean, smart, and useful — without relying on heavy frameworks or backend dependencies. Just pure web tech that works instantly and beautifully across desktop and mobile.
+                        </p>
+                    </div>
+
+                    <div class="bg-gray-700 border border-gray-600 rounded-lg p-6 mb-6">
+                        <h3 class="text-lg font-semibold mb-4 text-white">What Bolt AI Offers</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <div class="text-sm text-gray-300">🧠 <strong>BoltCore AI</strong> - Multi-role chat assistant</div>
+                                <div class="text-sm text-gray-300">🗓️ <strong>Smart Planner</strong> - AI-powered task management</div>
+                                <div class="text-sm text-gray-300">📰 <strong>Live News</strong> - Global news with AI summaries</div>
+                                <div class="text-sm text-gray-300">📈 <strong>Market Data</strong> - Real-time financial insights</div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="text-sm text-gray-300">📂 <strong>File Intelligence</strong> - Document analysis</div>
+                                <div class="text-sm text-gray-300">🔧 <strong>Toolbox</strong> - Productivity utilities</div>
+                                <div class="text-sm text-gray-300">💡 <strong>Idea Lab</strong> - AI business idea generator</div>
+                                <div class="text-sm text-gray-300">🎨 <strong>Modern UI</strong> - Dark/light themes</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-700 border border-gray-600 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4 text-white">Let's Connect</h3>
+                        <div class="space-y-3">
+                            <a href="mailto:jaydeepbalade15@gmail.com" class="flex items-center space-x-3 p-3 rounded-lg transition-colors hover:bg-gray-600 text-gray-300 hover:text-white">
+                                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                                <span>jaydeepbalade15@gmail.com</span>
+                            </a>
+                            <a href="https://linkedin.com/in/jaideep-balde-220a43204" target="_blank" class="flex items-center space-x-3 p-3 rounded-lg transition-colors hover:bg-gray-600 text-gray-300 hover:text-white">
+                                <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                </svg>
+                                <span>linkedin.com/in/jaideep-balde-220a43204</span>
+                            </a>
+                            <a href="https://main-portfolio-jd.vercel.app" target="_blank" class="flex items-center space-x-3 p-3 rounded-lg transition-colors hover:bg-gray-600 text-gray-300 hover:text-white">
+                                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"></path>
+                                </svg>
+                                <span>main-portfolio-jd.vercel.app</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-6 pt-6 border-t border-gray-600">
+                        <p class="text-sm flex items-center justify-center space-x-1 text-gray-400">
+                            <span>Made with</span>
+                            <span class="text-red-500">❤️</span>
+                            <span>and</span>
+                            <span>💻</span>
+                            <span>by Jaideep Balde</span>
+                        </p>
+                        <p class="text-xs mt-2 text-gray-500">© 2025 Bolt AI - All rights reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="fixed bottom-4 right-4 text-xs text-gray-500">
+            © 2025 Bolt AI by Jaideep Balde
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentTab = 'chat';
+        let currentRole = 'developer';
+        let currentTheme = 'dark';
+        let messages = [];
+        let currentTool = 'currency';
+        let timerInterval = null;
+        let timerMode = 'timer';
+        let timerRunning = false;
+        let timerSeconds = 300; // 5 minutes default
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            loadNews('world');
+            loadMarketData();
+            loadNotes();
+            initializeCalculator();
+        });
+
+        // Tab management
+        function setActiveTab(tab) {
+            currentTab = tab;
+            
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Show selected tab
+            document.getElementById(tab + '-tab').classList.remove('hidden');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.className = 'nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-300 hover:bg-purple-800/30 hover:text-white';
+            });
+            
+            event.target.className = 'nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg';
+        }
+
+        // Theme management
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme();
+            localStorage.setItem('bolt-theme', currentTheme);
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem('bolt-theme');
+            if (saved) {
+                currentTheme = saved;
+                applyTheme();
+            }
+        }
+
+        function applyTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (currentTheme === 'light') {
+                body.className = 'bg-gray-50 text-gray-900 transition-colors duration-300';
+                themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>';
+                themeText.textContent = 'Dark Mode';
+            } else {
+                body.className = 'bg-gray-900 text-white transition-colors duration-300';
+                themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>';
+                themeText.textContent = 'Light Mode';
+            }
+        }
+
+        // Chat functionality
+        function setRole(role) {
+            currentRole = role;
+            
+            // Update role buttons
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.className = 'role-btn px-4 py-2 rounded-full transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600';
+            });
+            
+            event.target.className = 'role-btn px-4 py-2 rounded-full transition-all duration-200 bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg';
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage('user', message);
+            input.value = '';
+            
+            // Show loading
+            showTyping();
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message, role: currentRole })
+                });
+                
+                const data = await response.json();
+                hideTyping();
+                addMessage('assistant', data.response);
+            } catch (error) {
+                hideTyping();
+                addMessage('assistant', 'Sorry, I encountered an error. Please try again.');
+            }
+        }
+
+        function addMessage(role, content) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+            
+            const time = new Date().toLocaleTimeString();
+            
+            messageDiv.innerHTML = `
+                <div class="max-w-3xl rounded-lg p-4 ${
+                    role === 'user'
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                        : 'bg-gray-800 border border-gray-700 text-gray-100'
+                } transition-all duration-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium opacity-80">
+                            ${role === 'user' ? 'You' : 'BoltCore AI'}
+                        </span>
+                        <span class="text-xs opacity-60">${time}</span>
+                    </div>
+                    <p class="whitespace-pre-wrap">${content}</p>
+                </div>
+            `;
+            
+            // Remove empty state if present
+            const emptyState = messagesContainer.querySelector('.text-center.py-12');
+            if (emptyState) {
+                emptyState.remove();
+            }
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTyping() {
+            const messagesContainer = document.getElementById('chat-messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'flex justify-start';
+            typingDiv.innerHTML = `
+                <div class="max-w-3xl rounded-lg p-4 bg-gray-800 border border-gray-700">
+                    <div class="flex items-center space-x-2">
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-purple-500 rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                            <div class="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        </div>
+                        <span class="text-sm text-gray-400">BoltCore AI is thinking...</span>
+                    </div>
+                </div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function hideTyping() {
+            const typing = document.getElementById('typing-indicator');
+            if (typing) typing.remove();
+        }
+
+        function exportChat() {
+            if (messages.length === 0) {
+                alert('No messages to export');
+                return;
+            }
+            
+            const chatContent = messages.map(msg => 
+                `[${msg.timestamp}] ${msg.role.toUpperCase()}: ${msg.content}`
+            ).join('\n\n');
+            
+            const blob = new Blob([chatContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bolt-ai-chat-${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function clearChat() {
+            if (confirm('Are you sure you want to clear the chat history?')) {
+                const messagesContainer = document.getElementById('chat-messages');
+                messagesContainer.innerHTML = `
+                    <div class="text-center py-12 text-gray-400">
+                        <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        <p class="text-lg">Start a conversation with BoltCore AI</p>
+                        <p class="text-sm">Choose a role above and ask me anything!</p>
+                    </div>
+                `;
+                messages = [];
+            }
+        }
+
+        // News functionality
+        async function loadNews(category) {
+            // Update active tab
+            document.querySelectorAll('.news-tab-btn').forEach(btn => {
+                btn.className = 'news-tab-btn px-4 py-2 rounded-full transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600';
+            });
+            event.target.className = 'news-tab-btn px-4 py-2 rounded-full transition-all duration-200 bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg';
+            
+            document.getElementById('news-loading').classList.remove('hidden');
+            document.getElementById('news-content').classList.add('hidden');
+            
+            try {
+                const response = await fetch(`/api/news?category=${category}`);
+                const articles = await response.json();
+                
+                const newsContent = document.getElementById('news-content');
+                newsContent.innerHTML = articles.map(article => `
+                    <div class="bg-gray-800 border border-gray-700 hover:border-purple-500/50 rounded-lg overflow-hidden transition-all duration-200 hover:shadow-lg">
+                        ${article.urlToImage ? `<img src="${article.urlToImage}" alt="${article.title}" class="w-full h-48 object-cover">` : ''}
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs px-2 py-1 rounded-full bg-purple-900 text-purple-300">${article.source.name}</span>
+                                <span class="text-xs text-gray-400">${new Date(article.publishedAt).toLocaleDateString()}</span>
+                            </div>
+                            <h3 class="font-semibold mb-2 line-clamp-2 text-white">${article.title}</h3>
+                            <p class="text-sm mb-4 line-clamp-3 text-gray-300">${article.description}</p>
+                            <div class="flex items-center space-x-2">
+                                <a href="${article.url}" target="_blank" class="flex items-center space-x-1 px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg text-sm hover:from-purple-600 hover:to-pink-600 transition-all duration-200">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                    <span>Read More</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                document.getElementById('news-loading').classList.add('hidden');
+                document.getElementById('news-content').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error loading news:', error);
+                document.getElementById('news-loading').classList.add('hidden');
+            }
+        }
+
+        // Market functionality
+        async function loadMarketData() {
+            document.getElementById('market-loading').classList.remove('hidden');
+            document.getElementById('market-content').classList.add('hidden');
+            
+            try {
+                const response = await fetch('/api/market');
+                const marketData = await response.json();
+                
+                const marketContent = document.getElementById('market-content');
+                marketContent.innerHTML = marketData.map(stock => {
+                    const isPositive = stock.changePercent >= 0;
+                    return `
+                        <div class="bg-gray-800 border border-gray-700 hover:border-purple-500/50 rounded-lg p-6 transition-all duration-200 hover:shadow-lg cursor-pointer">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="font-semibold text-lg text-white">${stock.symbol}</h3>
+                                    <p class="text-sm text-gray-400">${stock.name}</p>
+                                </div>
+                                <div class="flex items-center space-x-1 px-2 py-1 rounded-full text-sm ${
+                                    isPositive 
+                                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                                        : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                                }">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${
+                                            isPositive 
+                                                ? 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6'
+                                                : 'M13 17h8m0 0V9m0 8l-8-8-4 4-6-6'
+                                        }"></path>
+                                    </svg>
+                                    <span>${Math.abs(stock.changePercent).toFixed(2)}%</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-2xl font-bold text-white">${stock.price.toLocaleString()}</div>
+                                <div class="text-sm ${isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}">
+                                    ${stock.change >= 0 ? '+' : ''}${stock.change.toFixed(2)}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                document.getElementById('market-loading').classList.add('hidden');
+                document.getElementById('market-content').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error loading market data:', error);
+                document.getElementById('market-loading').classList.add('hidden');
+            }
+        }
+
+        // File upload functionality
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const content = e.target.result;
+                
+                try {
+                    const response = await fetch('/api/analyze', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content })
+                    });
+                    
+                    const analysis = await response.json();
+                    displayFileAnalysis(file.name, analysis);
+                } catch (error) {
+                    console.error('Error analyzing file:', error);
+                    alert('Error analyzing file. Please try again.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function displayFileAnalysis(fileName, analysis) {
+            // This would show the analysis results
+            alert(`File "${fileName}" analyzed successfully!\n\nWord Count: ${analysis.wordCount}\nSentiment: ${analysis.sentiment}\nKeywords: ${analysis.keywords.slice(0, 3).join(', ')}`);
+        }
+
+        // Toolbox functionality
+        function showTool(tool) {
+            currentTool = tool;
+            
+            // Update tool tabs
+            document.querySelectorAll('.tool-tab-btn').forEach(btn => {
+                btn.className = 'tool-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600';
+            });
+            event.target.className = 'tool-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg';
+            
+            // Hide all tools
+            document.querySelectorAll('.tool-content').forEach(el => el.classList.add('hidden'));
+            
+            // Show selected tool
+            document.getElementById(tool + '-tool').classList.remove('hidden');
+        }
+
+        async function convertCurrency() {
+            const amount = document.getElementById('currency-amount').value;
+            const from = document.getElementById('from-currency').value;
+            const to = document.getElementById('to-currency').value;
+            
+            try {
+                const response = await fetch(`/api/currency?from=${from}&to=${to}&amount=${amount}`);
+                const data = await response.json();
+                
+                document.getElementById('conversion-result').textContent = 
+                    `${parseFloat(amount).toLocaleString()} ${from} = ${data.result.toLocaleString()} ${to}`;
+                document.getElementById('currency-result').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error converting currency:', error);
+                alert('Error converting currency. Please try again.');
+            }
+        }
+
+        // Calculator functionality
+        let calcDisplay = '0';
+        let calcPrevious = null;
+        let calcOperation = null;
+        let calcWaitingForOperand = false;
+
+        function initializeCalculator() {
+            const buttonsContainer = document.getElementById('calculator-buttons');
+            const buttons = [
+                { text: 'Clear', class: 'col-span-2 bg-red-500 hover:bg-red-600 text-white', action: 'clear' },
+                { text: '÷', class: 'bg-orange-500 hover:bg-orange-600 text-white', action: 'operation' },
+                { text: '×', class: 'bg-orange-500 hover:bg-orange-600 text-white', action: 'operation' },
+                { text: '7', class: '', action: 'number' },
+                { text: '8', class: '', action: 'number' },
+                { text: '9', class: '', action: 'number' },
+                { text: '-', class: 'bg-orange-500 hover:bg-orange-600 text-white', action: 'operation' },
+                { text: '4', class: '', action: 'number' },
+                { text: '5', class: '', action: 'number' },
+                { text: '6', class: '', action: 'number' },
+                { text: '+', class: 'bg-orange-500 hover:bg-orange-600 text-white', action: 'operation' },
+                { text: '1', class: '', action: 'number' },
+                { text: '2', class: '', action: 'number' },
+                { text: '3', class: '', action: 'number' },
+                { text: '=', class: 'row-span-2 bg-blue-500 hover:bg-blue-600 text-white', action: 'equals' },
+                { text: '0', class: 'col-span-2', action: 'number' },
+                { text: '.', class: '', action: 'number' }
+            ];
+            
+            buttonsContainer.innerHTML = buttons.map(btn => `
+                <button onclick="handleCalcButton('${btn.action}', '${btn.text}')" 
+                        class="h-16 rounded-lg font-semibold text-lg transition-all duration-200 ${
+                            btn.class || 'bg-gray-700 text-white hover:bg-gray-600'
+                        } ${btn.class}">
+                    ${btn.text}
+                </button>
+            `).join('');
+        }
+
+        function handleCalcButton(action, value) {
+            switch (action) {
+                case 'number':
+                    inputCalcNumber(value);
+                    break;
+                case 'operation':
+                    inputCalcOperation(value);
+                    break;
+                case 'equals':
+                    performCalcCalculation();
+                    break;
+                case 'clear':
+                    clearCalc();
+                    break;
+            }
+            updateCalcDisplay();
+        }
+
+        function inputCalcNumber(num) {
+            if (calcWaitingForOperand) {
+                calcDisplay = String(num);
+                calcWaitingForOperand = false;
+            } else {
+                calcDisplay = calcDisplay === '0' ? String(num) : calcDisplay + num;
+            }
+        }
+
+        function inputCalcOperation(nextOperation) {
+            const inputValue = parseFloat(calcDisplay);
+
+            if (calcPrevious === null) {
+                calcPrevious = inputValue;
+            } else if (calcOperation) {
+                const currentValue = calcPrevious || 0;
+                const newValue = performCalcOperation(currentValue, inputValue, calcOperation);
+
+                calcDisplay = String(newValue);
+                calcPrevious = newValue;
+            }
+
+            calcWaitingForOperand = true;
+            calcOperation = nextOperation;
+        }
+
+        function performCalcOperation(firstValue, secondValue, operation) {
+            switch (operation) {
+                case '+': return firstValue + secondValue;
+                case '-': return firstValue - secondValue;
+                case '×': return firstValue * secondValue;
+                case '÷': return firstValue / secondValue;
+                default: return secondValue;
+            }
+        }
+
+        function performCalcCalculation() {
+            const inputValue = parseFloat(calcDisplay);
+
+            if (calcPrevious !== null && calcOperation) {
+                const newValue = performCalcOperation(calcPrevious, inputValue, calcOperation);
+                calcDisplay = String(newValue);
+                calcPrevious = null;
+                calcOperation = null;
+                calcWaitingForOperand = true;
+            }
+        }
+
+        function clearCalc() {
+            calcDisplay = '0';
+            calcPrevious = null;
+            calcOperation = null;
+            calcWaitingForOperand = false;
+        }
+
+        function updateCalcDisplay() {
+            document.getElementById('calc-display').textContent = calcDisplay;
+        }
+
+        // Notes functionality
+        async function loadNotes() {
+            try {
+                const response = await fetch('/api/notes');
+                const data = await response.json();
+                document.getElementById('notes-content').value = data.notes || '';
+            } catch (error) {
+                console.error('Error loading notes:', error);
+            }
+        }
+
+        async function saveNotes() {
+            const notes = document.getElementById('notes-content').value;
+            
+            try {
+                await fetch('/api/notes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ notes })
+                });
+                
+                // Download as file
+                const blob = new Blob([notes], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `bolt-ai-notes-${new Date().toISOString().split('T')[0]}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert('Notes saved and downloaded!');
+            } catch (error) {
+                console.error('Error saving notes:', error);
+                alert('Error saving notes. Please try again.');
+            }
+        }
+
+        // Timer functionality
+        function setTimerMode(mode) {
+            timerMode = mode;
+            
+            // Update mode buttons
+            document.querySelectorAll('.timer-mode-btn').forEach(btn => {
+                btn.className = 'timer-mode-btn flex-1 py-2 rounded-md text-sm font-medium transition-colors text-gray-300';
+            });
+            event.target.className = 'timer-mode-btn flex-1 py-2 rounded-md text-sm font-medium transition-colors bg-white text-gray-900 shadow';
+            
+            resetTimer();
+            
+            if (mode === 'timer') {
+                document.getElementById('timer-setup').classList.remove('hidden');
+            } else {
+                document.getElementById('timer-setup').classList.add('hidden');
+            }
+        }
+
+        function startTimer() {
+            if (timerMode === 'timer' && timerSeconds === 0) {
+                const minutes = parseInt(document.getElementById('timer-minutes').value) || 5;
+                timerSeconds = minutes * 60;
+            }
+            
+            timerRunning = true;
+            
+            timerInterval = setInterval(() => {
+                if (timerMode === 'timer') {
+                    timerSeconds--;
+                    if (timerSeconds <= 0) {
+                        timerSeconds = 0;
+                        timerRunning = false;
+                        clearInterval(timerInterval);
+                        alert('Timer finished!');
+                    }
+                } else {
+                    timerSeconds++;
+                }
+                updateTimerDisplay();
+            }, 1000);
+            
+            updateTimerControls();
+        }
+
+        function pauseTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+            updateTimerControls();
+        }
+
+        function resetTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+            
+            if (timerMode === 'timer') {
+                timerSeconds = 0;
+            } else {
+                timerSeconds = 0;
+            }
+            
+            updateTimerDisplay();
+            updateTimerControls();
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timerSeconds / 3600);
+            const minutes = Math.floor((timerSeconds % 3600) / 60);
+            const seconds = timerSeconds % 60;
+            
+            let display;
+            if (hours > 0) {
+                display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            document.getElementById('timer-display').textContent = display;
+        }
+
+        function updateTimerControls() {
+            const controls = document.getElementById('timer-controls');
+            
+            if (timerRunning) {
+                controls.innerHTML = `
+                    <button onclick="pauseTimer()" class="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Pause</span>
+                    </button>
+                    <button onclick="resetTimer()" class="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Reset</span>
+                    </button>
+                `;
+            } else {
+                controls.innerHTML = `
+                    <button onclick="startTimer()" class="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m-9 4h10a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span>Start</span>
+                    </button>
+                    <button onclick="resetTimer()" class="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Reset</span>
+                    </button>
+                `;
+            }
+        }
+
+        // Ideas functionality
+        function handleIdeaKeyPress(event) {
+            if (event.key === 'Enter') {
+                generateIdeas();
+            }
+        }
+
+        async function generateIdeas() {
+            const keyword = document.getElementById('idea-keyword').value.trim();
+            if (!keyword) return;
+            
+            document.getElementById('idea-empty').classList.add('hidden');
+            document.getElementById('idea-results').classList.add('hidden');
+            document.getElementById('idea-loading').classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/api/ideas', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ keyword })
+                });
+                
+                const data = await response.json();
+                displayIdeaResults(data);
+            } catch (error) {
+                console.error('Error generating ideas:', error);
+                document.getElementById('idea-loading').classList.add('hidden');
+                document.getElementById('idea-empty').classList.remove('hidden');
+            }
+        }
+
+        function displayIdeaResults(data) {
+            const resultsContainer = document.getElementById('idea-results');
+            
+            resultsContainer.innerHTML = `
+                <!-- Business Idea -->
+                <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-white">Business Idea</h3>
+                    </div>
+                    <div class="bg-gray-700 border border-gray-600 rounded-lg p-4">
+                        <p class="text-lg text-gray-100">${data.businessIdea}</p>
+                        <button onclick="copyToClipboard('${data.businessIdea}')" class="mt-3 text-sm px-3 py-1 rounded bg-purple-900 text-purple-300 hover:bg-purple-800 transition-colors">
+                            Copy Idea
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Domain Suggestions -->
+                <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-white">Domain Suggestions</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        ${data.domains.map(domain => `
+                            <div onclick="copyToClipboard('${domain}')" class="bg-gray-700 border border-gray-600 hover:border-blue-500 rounded-lg p-3 cursor-pointer transition-all duration-200">
+                                <p class="font-mono text-sm text-blue-400">${domain}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <p class="text-xs mt-3 text-gray-400">Click any domain to copy to clipboard</p>
+                </div>
+
+                <!-- Competitors -->
+                <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-white">Potential Competitors</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        ${data.competitors.map(competitor => `
+                            <span onclick="copyToClipboard('${competitor}')" class="px-4 py-2 rounded-full text-sm cursor-pointer transition-all duration-200 bg-green-900 text-green-300 hover:bg-green-800">
+                                ${competitor}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Color Palette -->
+                <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <svg class="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM7 3H5a2 2 0 00-2 2v12a4 4 0 004 4h2a2 2 0 002-2V5a2 2 0 00-2-2z"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-white">Design Color Palette</h3>
+                    </div>
+                    <div class="flex space-x-4">
+                        ${data.colorPalette.map(color => `
+                            <div onclick="copyToClipboard('${color}')" class="flex flex-col items-center cursor-pointer group">
+                                <div class="w-16 h-16 rounded-lg shadow-lg group-hover:scale-110 transition-transform duration-200" style="background-color: ${color}"></div>
+                                <span class="text-xs mt-2 font-mono text-gray-300">${color}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <p class="text-xs mt-3 text-gray-400">Click any color to copy hex code</p>
+                </div>
+
+                <!-- Generate Another -->
+                <div class="text-center">
+                    <button onclick="resetIdeas()" class="px-6 py-3 rounded-lg transition-colors bg-gray-700 text-gray-300 hover:bg-gray-600">
+                        Generate Another Idea
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('idea-loading').classList.add('hidden');
+            document.getElementById('idea-results').classList.remove('hidden');
+        }
+
+        function resetIdeas() {
+            document.getElementById('idea-keyword').value = '';
+            document.getElementById('idea-results').classList.add('hidden');
+            document.getElementById('idea-empty').classList.remove('hidden');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Create a temporary notification
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                notification.textContent = 'Copied to clipboard!';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 2000);
+            }).catch(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+
+        // About modal
+        function showAbout() {
+            document.getElementById('about-modal').classList.remove('hidden');
+        }
+
+        function hideAbout() {
+            document.getElementById('about-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

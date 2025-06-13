@@ -1,0 +1,91 @@
+{
+  "messages": [
+    {
+      "id": "1",
+      "role": "user",
+      "content": "hi",
+      "timestamp": "2025-06-13T13:48:28.816293"
+    },
+    {
+      "id": "2",
+      "role": "assistant",
+      "content": "As a developer assistant, I can help you with: hi. Let me provide some coding insights and best practices.",
+      "timestamp": "2025-06-13T13:48:28.816293"
+    },
+    {
+      "id": "3",
+      "role": "user",
+      "content": "what can i do",
+      "timestamp": "2025-06-13T13:48:37.613007"
+    },
+    {
+      "id": "4",
+      "role": "assistant",
+      "content": "As a developer assistant, I can help you with: what can i do. Let me provide some coding insights and best practices.",
+      "timestamp": "2025-06-13T13:48:37.613007"
+    },
+    {
+      "id": "5",
+      "role": "user",
+      "content": "tell me myy name",
+      "timestamp": "2025-06-13T13:48:43.483041"
+    },
+    {
+      "id": "6",
+      "role": "assistant",
+      "content": "As a developer assistant, I can help you with: tell me myy name. Let me provide some coding insights and best practices.",
+      "timestamp": "2025-06-13T13:48:43.483041"
+    },
+    {
+      "id": "7",
+      "role": "user",
+      "content": "my name is jaideep",
+      "timestamp": "2025-06-13T13:48:47.462386"
+    },
+    {
+      "id": "8",
+      "role": "assistant",
+      "content": "As a developer assistant, I can help you with: my name is jaideep. Let me provide some coding insights and best practices.",
+      "timestamp": "2025-06-13T13:48:47.462386"
+    },
+    {
+      "id": "9",
+      "role": "user",
+      "content": "provide c++ code for hello world",
+      "timestamp": "2025-06-13T13:49:05.854427"
+    },
+    {
+      "id": "10",
+      "role": "assistant",
+      "content": "As a developer assistant, I can help you with: provide c++ code for hello world. Let me provide some coding insights and best practices.",
+      "timestamp": "2025-06-13T13:49:05.854427"
+    },
+    {
+      "id": "11",
+      "role": "user",
+      "content": "hi",
+      "timestamp": "2025-06-13T14:22:24.170887"
+    },
+    {
+      "id": "12",
+      "role": "assistant",
+      "content": "Regarding your financial query: hi. Let me provide some market insights and investment strategies.",
+      "timestamp": "2025-06-13T14:22:24.170887"
+    },
+    {
+      "id": "13",
+      "role": "user",
+      "content": "which stock to buy",
+      "timestamp": "2025-06-13T14:22:32.992712"
+    },
+    {
+      "id": "14",
+      "role": "assistant",
+      "content": "Regarding your financial query: which stock to buy. Let me provide some market insights and investment strategies.",
+      "timestamp": "2025-06-13T14:22:32.993670"
+    }
+  ],
+  "tasks": [],
+  "notes": "",
+  "theme": "dark"
+}
